@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cupons {
+  cupom_id       Int       @id @default(autoincrement())
+  cupom_nome     String
+  cupom_codigo   String
+  cupom_status   String    @default("ativo")
+  cupom_validade DateTime
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+}
+
+model categorias {
+  categoria_id       Int             @id @default(autoincrement())
+  categoria_nome     String
+  categoria_imagem   String
+  categoria_destaque Boolean
+  createdAt          DateTime        @default(now())
+  updateAt           DateTime?       @updatedAt
+  subcategorias      subcategorias[]
+}
+
+model subcategorias {
+  sub_id                 Int        @id @default(autoincrement())
+  sub_nome               String
+  sub_imagem             String
+  createdAt              DateTime   @default(now())
+  updateAt               DateTime?  @updatedAt
+  subcategorias_id       Int
+  Categoria_id Int
+  categoria              categorias @relation(fields: [Categoria_id], references: [categoria_id])
+}
